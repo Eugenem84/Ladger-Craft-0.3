@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['client_id', 'total_amount'];
+    protected $fillable = ['client_id', 'total_amount', 'user_id'];
 
     // связь с таблтцей специализации( один ко многим)
     public function specialization()
@@ -29,4 +29,8 @@ class Order extends Model
         return $this->belongsToMany(Service::class, 'order_service', 'order_id', 'service_id');
     }
 
+    public function user()
+    {
+        $this->belongsTo(User::class);
+    }
 }

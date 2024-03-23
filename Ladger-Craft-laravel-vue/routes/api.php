@@ -24,8 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+
+Route::middleware('auth:api')->group(function (){
+    Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
+});
+
 //Old version
-Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
+//Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
 
 
 Route::get('/get_service/{categoryId}', [ServiceController::class, 'getByCategory']);
@@ -34,10 +39,10 @@ Route::post('/delete_service', [ServiceController::class, 'delete']);
 Route::post('/edit_service', [ServiceController::class, 'edit']);
 
 
-Route::post('/add_specialization', [SpecializationController::class, 'addNew']);
+//Route::post('/add_specialization', [SpecializationController::class, 'addNew']);
 Route::post('/delete_specialization', [SpecializationController::class, 'delete']);
 Route::post('/edit_specialization', [SpecializationController::class, 'edit']);
-Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
+//Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
 
 
 Route::get('/get_all_clients', [ClientController::class, 'getAll']);
@@ -53,9 +58,9 @@ Route::post('/delete_category', [CategoryController::class, 'delete']);
 Route::post('/edit_category', [CategoryController::class, 'edit']);
 
 
-Route::get('/get_all_orders', [OrderController::class, 'getAll']);
+//Route::get('/get_all_orders', [OrderController::class, 'getAll']);
 Route::get('/order/{orderId}', [OrderController::class, 'getDetails']);
-Route::post('/save_order', [OrderController::class, 'saveOrder']);
+//Route::post('/save_order', [OrderController::class, 'saveOrder']);
 Route::delete('/delete_order/{orderId}', [OrderController::class, 'deleteOrder']);
 Route::post('/update_order', [OrderController::class, 'updateOrder']);
 Route::get('/get_services/{orderId}', [OrderController::class, 'getServices']);

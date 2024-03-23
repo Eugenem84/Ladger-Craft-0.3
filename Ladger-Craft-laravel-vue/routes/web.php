@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +17,7 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Auth::routes();
@@ -25,3 +27,11 @@ Route::get('/statistic', [HomeController::class, 'showStatistic']);
 Route::get('/order', [HomeController::class, 'showOrderMake']);
 Route::get('/catalog', [HomeController::class, 'showCatalog']);
 Route::get('/history', [HomeController::class, 'showHistory']);
+
+
+Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
+Route::post('/add_specialization', [SpecializationController::class, 'addNew']);
+
+Route::get('/get_all_orders', [OrderController::class, 'getAll']);
+Route::get('/get_orders_by_user', [OrderController::class, 'getByUser']);
+Route::post('/save_order', [OrderController::class, 'saveOrder']);

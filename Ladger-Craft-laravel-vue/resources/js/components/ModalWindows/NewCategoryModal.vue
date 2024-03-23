@@ -31,6 +31,7 @@ export default {
           })
       this.isVisible = false
     },
+
     closeModal(){
       this.isVisible = false
     }

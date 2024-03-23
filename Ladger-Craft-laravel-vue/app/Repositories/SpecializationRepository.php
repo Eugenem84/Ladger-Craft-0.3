@@ -41,10 +41,11 @@ class SpecializationRepository extends Controller
         return false;
     }
 
-    public function addNew($specializationName)
+    public function addNew($specializationName, $userId)
     {
         $specialization = new Specialization();
         $specialization->specializationName = $specializationName;
+        $specialization->user_id = $userId;
         $specialization->popularCounter = 1;
         $specialization->save();
     }

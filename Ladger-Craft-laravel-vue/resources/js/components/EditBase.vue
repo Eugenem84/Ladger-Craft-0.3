@@ -254,7 +254,14 @@ export default {
   },
 
   mounted() {
-    axios.get('http://localhost:8000/api/getSpecialization')
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.get('http://localhost:8000/get_all_specializations', {
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken,
+              //  'Authorization': `Bearer ${laravelSessionToken}`
+          }
+      })
         .then(response => {
           this.specializations = response.data
           console.log(response.data)

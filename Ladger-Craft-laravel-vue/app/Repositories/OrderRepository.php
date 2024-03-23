@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\OrderController;
 use App\Models\Order;
 use App\Models\OrderService;
+use Illuminate\Support\Facades\Auth;
 
 class OrderRepository extends Controller
 {
     public function getAll()
     {
         return Order::all();
+    }
+
+    public function getByUser($userId)
+    {
+        return Order::where('user_id', $userId)->get();
     }
 
     public function getDetails($id)
@@ -28,9 +34,12 @@ class OrderRepository extends Controller
     public function saveOrder(array $data)
     {
         //сохранение заказ-наряда
+        $user = Auth::user();
+        $userId = optional($user)->getAuthIdentifier();
         $order = new Order();
         $order->client_id = $data['clientId'];
         $order->specialization_id = $data['specializationId'];
+        $order->user_id = $userId;
         $order->total_amount = (int)$data['totalAmount'];
         $order->materials = $data['materials'];
         $order->comments = $data['comments'];

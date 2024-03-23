@@ -32,7 +32,7 @@ export default {
     },
 
     loadAllOrders(){
-      axios.get('http://localhost:8000/api/get_all_orders')
+      axios.get('http://localhost:8000/get_all_orders')
           .then(response => {
             this.orders = response.data
             console.log(response.data)
@@ -41,6 +41,19 @@ export default {
             console.error(err.message)
           })
     },
+
+    loadOrderByUser(){
+      axios.get('http://localhost:8000/get_orders_by_user')
+          .then(response => {
+              this.orders = response.data
+              console.log(response.data)
+          })
+          .catch(err => {
+              console.error(err.message)
+          })
+    },
+
+
     loadAllClients(){
       axios.get('http://localhost:8000/api/get_all_clients')
           .then(response => {
@@ -110,7 +123,7 @@ export default {
   },
 
   mounted() {
-    this.loadAllOrders()
+    this.loadOrderByUser()
   }
 }
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\SpecializationRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SpecializationController extends Controller
 {
@@ -16,8 +17,15 @@ class SpecializationController extends Controller
 
     public function getAll()
     {
-        $specializations = $this->specializationRepository->getAll();
-        return response()->json($specializations);
+        $user = Auth::user();
+
+        if ($user) {
+            $specializations = optional($user)->specializations;
+            return response()->json($specializations);
+        } else {
+            return response()->json(['error' => 'Ошибка авторизации'], 401);
+        }
+
     }
 
     public function edit(Request $request)
@@ -38,7 +46,10 @@ class SpecializationController extends Controller
     {
         try {
             $specializationName = $request->input('specializationName');
-            $this->specializationRepository->addNew($specializationName);
+            $user = Auth::user();
+            $userId = optional($user)->getAuthIdentifier();
+            $this->specializationRepository->addNew($specializationName, $userId);
+
             return response()->json(['message' => 'Специализация успешно добавлена'], 200);
         } catch (\Exception $e){
             return \response()->json(['error' => 'Internal Server Error'], 500);

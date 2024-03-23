@@ -9,6 +9,7 @@ use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Auth;
 use function Laravel\Prompts\error;
 use App\Repositories\SpecializationRepository;
 use App\Repositories\ClientRepository;
@@ -62,6 +63,37 @@ class OrderController extends Controller
         }
     }
 
+    public function getByUser()
+    {
+        $user = Auth::user();
+        $userId  = $user->getAuthIdentifier();
+        $orders = $this->orderRepository->getByUser($userId);
+        foreach ($orders as $order) {
+            $clientId = $order->client_id;
+            $specializationId = $order->specialization_id;
+
+            $clientName = $this->clientReposutory->getName($clientId);
+            $specializationName = $this->specializationRepository->getName($specializationId);
+
+            if($specializationName){
+                $order->specialization_name = $specializationName;
+            } else {
+                $order->specialization_name = 'no name';
+            }
+
+            if ($clientName){
+                $order->client_name = $clientName;
+            } else {
+                $order->specialization_name = 'no name';
+            }
+        }
+        if ($orders) {
+            return response()->json($orders);
+        } else {
+            return response()->json(['error' => 'ордеров нет']);
+        }
+    }
+
     public function getDetails($id){
         $order = $this->orderRepository->getDetails($id);
         if (!$order){
@@ -85,6 +117,8 @@ class OrderController extends Controller
 
     public function saveOrder(Request $request)
     {
+        //$user = Auth::user();
+        //$userId = $user->getAuthIdentifier();
         $data = $request->only(['clientId', 'specializationId', 'totalAmount', 'materials', 'comments']);
         $data['servicesId'] = $request->input('servicesId');
         $order = $this->orderRepository->saveOrder($data);

@@ -347,8 +347,6 @@ export default {
 
             </div>
             <div class="tab-pane" id="addedServices">
-                content2
-
                 <div id="addedServices">
                     <div v-for="service in addedServices" :key="service.id" >
                         <div class="d-flex justify-content-between align-items-center">

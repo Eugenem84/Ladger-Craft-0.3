@@ -167,10 +167,10 @@ export default {
       this.$refs.newClientModal.open()
     },
 
-    openNewCategoryModal(){
-      console.log('открываем модальное окно создания категории')
-      this.$refs.newCategoryModal.selectesSpecialization = this.selectedSpecialization
-      this.$refs.newCategoryModal.open()
+    openNewCategoryModal() {
+        console.log('открытие модального окна новой категории')
+        console.log('выбрана специализацияя: ', this.selectedSpecialization)
+        this.$refs.newCategoryModal.open(this.selectedSpecialization)
     },
 
     // открытие модального окна для добавления новой услуги
@@ -204,7 +204,7 @@ export default {
         // проверка на пустое поле выбора клиента
         this.showAlert('danger', 'Сначала выберите клиента')
       } else {
-        axios.post('http://localhost:8000/api/save_order', orderData, {
+        axios.post('http://localhost:8000/save_order', orderData, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
@@ -227,7 +227,20 @@ export default {
   },
 
   mounted() {
-    axios.get('http://localhost:8000/api/getSpecialization')
+      console.log('cookie: ', document.cookie)
+      console.log('laravel-session cookie: ',document.cookie.includes('laravel_session'));
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      axios.defaults.withCredentials = true
+      //const laravelSessionToken = document.cookie.match(/laravel_session=([^;]+)/)[1];
+      console.log('csrf: ', csrfToken)
+      //console.log('auth-token: ', laravelSessionToken)
+      axios.get('http://localhost:8000/get_all_specializations', {
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+          //  'Authorization': `Bearer ${laravelSessionToken}`
+            }
+        })
         .then(response => {
           this.specializations = response.data
           console.log('список специализаций: ', this.specializations )
@@ -288,7 +301,9 @@ export default {
               <button type="button"
                       class="btn btn-primary"
                       data-bs-target="#newCategoryModal"
-                      data-bs-toggle="modal" >
+                      data-bs-toggle="modal"
+                      v-on:click="openNewCategoryModal"
+              >
                   +
               </button>
 
@@ -324,8 +339,6 @@ export default {
 
               </div>
               <div class="tab-pane" id="addedServices">
-                  content2
-
                   <div id="addedServices">
                       <div v-for="service in addedServices" :key="service.id" >
                           <div class="d-flex justify-content-between align-items-center">
